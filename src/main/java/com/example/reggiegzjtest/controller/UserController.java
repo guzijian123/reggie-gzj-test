@@ -7,6 +7,7 @@ import com.example.reggiegzjtest.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -25,6 +27,9 @@ import java.util.Random;
 public class UserController {
         @Autowired  // java已经整合了Mail javaMailSender.send(message)  发送邮箱
         private JavaMailSender javaMailSender;
+
+        @Autowired
+        private RedisTemplate redisTemplate;
 
     @Autowired
     private UserService userService;
@@ -51,7 +56,9 @@ public class UserController {
             javaMailSender.send(message);
 
 //        需要将生成的验证码保存到Session
-            session.setAttribute(phone,code);
+//            session.setAttribute(phone,code);
+//            将生成的验证码保存到redis缓存
+            redisTemplate.opsForValue().set(phone,code,2, TimeUnit.MINUTES);
         }
 
 
@@ -61,8 +68,11 @@ public class UserController {
     public R<User> login(@RequestBody Map map ,HttpSession session){
         String phone = map.get("phone").toString();
         String code = map.get("code").toString();
-        String phoneCode = session.getAttribute(phone).toString();
-
+//            从session中取出验证码
+//        String phoneCode = session.getAttribute(phone).toString();
+//            从redis缓存中取出验证码
+        String phoneCode = redisTemplate.opsForValue().get(phone).toString();
+        if(phoneCode != null)
         if(phoneCode.equals(code) && code != null){
             LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
             userLambdaQueryWrapper.eq(User::getPhone,phone);
@@ -75,7 +85,8 @@ public class UserController {
                 userService.save(user);
             }
             session.setAttribute("user",user.getId());
-        return R.success(user);
+            log.info("缓存中的验证码:{}",phoneCode);
+            return R.success(user);
         }
         return R.error("登陆失败");
     }
