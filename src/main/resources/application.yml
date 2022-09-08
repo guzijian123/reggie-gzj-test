@@ -22,6 +22,9 @@ spring:
       url: jdbc:mysql://localhost:3306/reggie?characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
       username: root
       password: 123456
+  cache:
+    redis:
+      time-to-live: 18000000 # 设置超时时间
   redis:
     host: 43.143.25.143
     port: 6379

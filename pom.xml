@@ -77,6 +77,11 @@
             <version>8.0.29</version>
             <scope>runtime</scope>
         </dependency>
+<!--        spring cache-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>

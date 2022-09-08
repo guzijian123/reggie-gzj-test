@@ -1,9 +1,10 @@
 package com.example.reggiegzjtest.common;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class R<T> {
+public class R<T> implements Serializable {
     public Integer code;
     public String msg;
     public T data;
