@@ -1,7 +1,6 @@
 server:
   port: 8080
 
-
 spring:
   mail:
     host: smtp.qq.com  # 只发送不接收
@@ -77,7 +76,8 @@ mybatis-plus:
       id-type: ASSIGN_ID  # 雪花算法
 reggie:
 #  path: src/main/resources/static/
-  path: C:\Users\20412\Desktop\learningroom\reggie-gzj-test\src\main\resources\static\
+#  path: C:\Users\20412\Desktop\learningroom\reggie-gzj-test\src\main\resources\static\
+  path: /usr/local/img
 #  path: D:\
 #Redis服务器地址
 #  spring.redis.host=192.168.140.136
