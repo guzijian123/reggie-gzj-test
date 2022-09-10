@@ -102,4 +102,29 @@ public class SetmealController {
         setmealService.updateWithStatus(state,ids);
         return R.success("修改成功");
     }
+    /**
+     * 获取菜单数据
+     */
+    @GetMapping("/{setmealId}")
+    public R<SetmealDto> getSetmeal(@PathVariable("setmealId") Long setmealId){
+        log.info("setmealId:{}",setmealId);
+        SetmealDto setmealDto = new SetmealDto();
+        Setmeal setmeal = setmealService.getById(setmealId);
+        BeanUtils.copyProperties(setmeal,setmealDto);
+        LambdaQueryWrapper<SetmealDish> setmealDishLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        setmealDishLambdaQueryWrapper.eq(SetmealDish::getSetmealId,setmealId);
+        List<SetmealDish> list = setmealDishService.list(setmealDishLambdaQueryWrapper);
+        setmealDto.setSetmealDishes(list);
+        return R.success(setmealDto);
+    }
+
+    /**
+     * 修改指定的菜品
+     */
+    @PutMapping
+    public R<String> update(@RequestBody SetmealDto setmealDto){
+        log.info("setmealDto:{}",setmealDto);
+        setmealService.updateWithDish(setmealDto);
+        return R.success("修改成功");
+    }
 }

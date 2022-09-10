@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.reggiegzjtest.common.CustomException;
 import com.example.reggiegzjtest.dto.SetmealDto;
+import com.example.reggiegzjtest.entities.Dish;
 import com.example.reggiegzjtest.entities.Setmeal;
 import com.example.reggiegzjtest.entities.SetmealDish;
 import com.example.reggiegzjtest.service.SetmealDishService;
@@ -72,6 +73,24 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal>
         updateWrapper.in(Setmeal::getId,ids);
         updateWrapper.set(Setmeal::getStatus,status);
         this.update(updateWrapper);
+    }
+
+    @Override
+    public void updateWithDish(SetmealDto setmealDto) {
+        this.updateById(setmealDto);
+        Long id = setmealDto.getId();
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId,id);
+
+        setmealDishService.remove(queryWrapper);
+        List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
+        setmealDishes = setmealDishes.stream()
+                .map(item ->{
+                    item.setSetmealId(id);
+                    return item;
+                })
+                .collect(Collectors.toList());
+        setmealDishService.saveBatch(setmealDishes);
     }
 }
 
