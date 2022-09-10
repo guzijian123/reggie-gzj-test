@@ -75,6 +75,12 @@ public class DishController {
         DishDto byIdWithFlavor = dishService.getByIdWithFlavor(id);
         return R.success(byIdWithFlavor);
     }
+    @PostMapping("/status/{state}")
+    public R<String> status(@PathVariable("state")int status,@RequestParam List<String> ids){
+        log.info("参数位：ids{},status:{}",ids,status);
+        dishService.updateWithStatus(status,ids);
+        return R.success("修改成功");
+    }
 
     /**
      * 修改菜品信息

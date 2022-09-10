@@ -96,4 +96,10 @@ public class SetmealController {
         return R.success(setmealDtos);
 //        return null;
     }
+
+    @PostMapping("/status/{state}")
+    public R<String> updateStatus(@PathVariable("state") int state,@RequestParam List<String> ids){
+        setmealService.updateWithStatus(state,ids);
+        return R.success("修改成功");
+    }
 }

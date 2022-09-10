@@ -1,6 +1,7 @@
 package com.example.reggiegzjtest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.reggiegzjtest.common.CustomException;
 import com.example.reggiegzjtest.dto.SetmealDto;
@@ -63,6 +64,14 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal>
         LambdaQueryWrapper<SetmealDish> setmealDishLambdaQueryWrapper = new LambdaQueryWrapper<>();
         setmealDishLambdaQueryWrapper.in(SetmealDish::getSetmealId,ids);
         setmealDishService.remove(setmealDishLambdaQueryWrapper);
+    }
+
+    @Override
+    public void updateWithStatus(int status, List<String> ids) {
+        LambdaUpdateWrapper<Setmeal> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.in(Setmeal::getId,ids);
+        updateWrapper.set(Setmeal::getStatus,status);
+        this.update(updateWrapper);
     }
 }
 

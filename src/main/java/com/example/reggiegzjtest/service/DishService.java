@@ -4,6 +4,8 @@ import com.example.reggiegzjtest.dto.DishDto;
 import com.example.reggiegzjtest.entities.Dish;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author 20412
 * @description 针对表【dish(菜品管理)】的数据库操作Service
@@ -18,4 +20,7 @@ public interface DishService extends IService<Dish> {
 
 //    修改菜品信息
     public void updateWithFlavor(DishDto dishDto);
+
+//    根据状态修改菜品的信息
+    public void updateWithStatus(int status, List<String> ids);
 }

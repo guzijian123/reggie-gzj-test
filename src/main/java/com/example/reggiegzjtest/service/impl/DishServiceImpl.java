@@ -1,6 +1,7 @@
 package com.example.reggiegzjtest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.reggiegzjtest.dto.DishDto;
 import com.example.reggiegzjtest.entities.Dish;
@@ -80,6 +81,14 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
                 })
                 .collect(Collectors.toList());
         dishFlavorService.saveBatch(flavors);
+    }
+
+    @Override
+    public void updateWithStatus(int status, List<String> ids) {
+        LambdaUpdateWrapper<Dish> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.in(Dish::getId,ids);
+        updateWrapper.set(Dish::getStatus,status);
+        this.update(updateWrapper);
     }
 }
 
